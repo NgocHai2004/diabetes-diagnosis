@@ -13,7 +13,7 @@ data = pd.read_csv("diabetes.csv")
 # data = ProfileReport(data,title = "Profiling Report")  
 # data.to_file("data_diabetes.html")
 
-class diabetes:
+class Diabete:
     def __init__(self,x,y):
         self.x = x
         self.y = y
@@ -25,14 +25,14 @@ class diabetes:
     
     # chọn xem dùng model nào sau khi chia tệp dữ liệu xong
     def select_model(self):
-        x_train , x_test, y_train, y_test = self.split_date()
+        x_train , x_test, y_train, y_test = self.split_data()
         select = LazyClassifier(verbose=0,ignore_warnings=True,custom_metric=None)
         model,predictions = select.fit(x_train, x_test, y_train, y_test)
         print(pd.DataFrame(model).sort_values(by="Accuracy",ascending=False))
 
     # chọn QuadraticDiscriminantAnalysis vì đứng đầu kết quả về recall:
     def use_model(self):
-        x_train , x_test, y_train, y_test = self.split_date()
+        x_train , x_test, y_train, y_test = self.split_data()
         param = {
             "priors": [None, [0.5, 0.5], [0.25, 0.75]],  # Tối ưu priors (tỉ lệ của các lớp)
             "reg_param": [0.0, 0.1, 0.5, 1.0],  # Tối ưu tham số regularization
@@ -59,10 +59,15 @@ class diabetes:
         print(classification_report(y_test,y_pred))
 
 # Dùng OOP
-target = "Outcome"
-x = data.drop(target,axis=1)
-y = data[target]      
-dia = diabetes(x,y) 
-dia.split_data()
-dia.select_model()
-dia.use_model()
+def main():
+    target = "Outcome"
+    x = data.drop(target,axis=1)
+    y = data[target]  
+    dia = Diabete(x,y) 
+    dia.split_data()
+    dia.select_model()
+    dia.use_model()
+
+main()
+
+
